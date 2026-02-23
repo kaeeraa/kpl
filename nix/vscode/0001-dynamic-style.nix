@@ -1,6 +1,6 @@
-final: prev: {
+{ fetchFromGitHub }: final: prev: {
   vscode = prev.vscode.overrideAttrs (old: {
-    src = builtins.fetchFromGitHub {
+    src = fetchFromGitHub {
       owner = "microsoft";
       repo = "vscode";
       rev = "1.106.2";
