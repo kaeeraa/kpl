@@ -1,0 +1,34 @@
+--- a/src/vs/workbench/electron-browser/desktop.main.ts
++++ b/src/vs/workbench/electron-browser/desktop.main.ts
+@@ -116,6 +116,31 @@ export class DesktopMain extends Disposable {
+ 		// Init services and wait for DOM to be ready in parallel
+ 		const [services] = await Promise.all([this.initServices(), domContentLoaded(mainWindow)]);
+
++		import { readFileSync } from 'fs';
++		import { join } from 'path';
++
++		const userHome = process.env.HOME || process.env.USERPROFILE;
++		const stylePath = join(userHome, '.vscode/style.css');
++		const scriptPath = join(userHome, '.vscode/script.js');
++
++		try {
++		    const styleContent = readFileSync(stylePath, 'utf-8');
++		    const styleEl = document.createElement('style');
++		    styleEl.textContent = styleContent;
++		    mainWindow.document.head.appendChild(styleEl);
++		} catch (e) {
++		    console.error('Failed to load style.css', e);
++		}
++
++		try {
++		    const scriptContent = readFileSync(scriptPath, 'utf-8');
++		    const scriptEl = document.createElement('script');
++		    scriptEl.textContent = scriptContent;
++		    mainWindow.document.body.appendChild(scriptEl);
++		} catch (e) {
++		    console.error('Failed to load script.js', e);
++		}
++
+ 		// Apply zoom level early once we have a configuration service
+ 		// and before the workbench is created to prevent flickering.
+ 		// We also need to respect that zoom level can be configured per
