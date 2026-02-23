@@ -1,7 +1,7 @@
 {
   description = "Nix flake for the kpl project.";
 
-  outputs = {
+  outputs = {...}: {
     x86_64-linux = {
       overlays = {
         vscode = {
